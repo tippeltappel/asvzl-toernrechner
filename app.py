@@ -2,7 +2,6 @@
 from datetime import date, timedelta
 import math
 import streamlit as st
-import pandas as pd
 import qrcode
 
 Bootspauschalen = {"Wiking": 102, "Frithjof": 36, "Sprotte": 36}
@@ -34,7 +33,7 @@ Beitragsstufenaufschläge = {
 class Trip:
     def __init__(self) -> None:
         # input data from trip section
-        self.description = "Sommertörn .."
+        self.description = ""
         self.boat = ""
         self.first_day = date.today()
         self.last_day = date.today() + timedelta(days=14)
@@ -191,9 +190,9 @@ def app(rate_groups, boat_rates, extra_rates):
     # input trip data
     trip = Trip()
     trip.description = st.text_input(
-        "Törnbezeichnung / Verwendungszweck in Überweisung",
+        "Törnbezeichnung / Verwendungszweck in Überweisung an Schatzmeister",
         value=trip.description,
-        placeholder="z.B. Sommertörn 2022 - John Doe",
+        placeholder="z.B. Sommertörn 2022 - Skipper John Doe",
     )
 
     trip_col1, trip_col2, trip_col3, trip_col4 = st.columns(4)
@@ -201,27 +200,23 @@ def app(rate_groups, boat_rates, extra_rates):
     trip.boat = trip_col1.selectbox("Boot", boat_rates.keys())
     # boat_rate = boat_rates.get(boat)
     trip.first_day = trip_col2.date_input(
-        "Reisedatum von",
-        value=trip.first_day,
-        max_value=trip.last_day - timedelta(days=1),
-    )
+        "Reisedatum von",value=trip.first_day)
+    
     trip.last_day = trip_col3.date_input(
         "Reisedatum bis",
-        value=trip.last_day,
-        min_value=trip.first_day + timedelta(days=1),
-    )
+        value=trip.first_day + timedelta(days=14),min_value=trip.first_day + timedelta(days=1))
 
     trip_col4.write("Anzahl Nächte\n\n" + str(trip.number_of_nights))
     # check trip duration
     if trip.number_of_nights > 20:
-        st.info(
+        st.warning(
             "Prüfe bitte ob eine Reisedauer von "
             + str(trip.number_of_nights)
             + " Nächten stimmen kann."
         )
 
     st.info(
-        "Die maximale Bootspauschale für Törn beträgt : "
+        "Die Bootspauschale für den Törn beträgt : "
         + str(trip.boat_rate)
         + "€ x "
         + str(trip.number_of_nights)
@@ -263,7 +258,7 @@ def app(rate_groups, boat_rates, extra_rates):
             "",
             value=p.first_day,
             min_value=trip.first_day,
-            max_value=p.last_day - timedelta(days=1),
+            max_value=trip.last_day - timedelta(days=1),
             key=i,
         )
 
