@@ -111,7 +111,8 @@ class Participant(Trip):
         self._number_of_nights_om = 0
         self._rate_group = ""
         self._extra_rate = 0
-        self._extra_total = 0, ""       # this is a tuple which returns a foot note as second item in case skipper discount is applied
+        # this is a tuple which returns a foot note as second item in case skipper discount is applied
+        self._extra_total = 0, ""
         self._boat_total = 0
         # data derived from trip section
         self.trip = trip
@@ -178,10 +179,11 @@ def round_normal(n):
 
 def app(rate_groups, boat_rates, extra_rates):
     # browser tab title & favicon
-    st.set_page_config(page_title="ASVzL Törnbeitragsrechner", page_icon=":boat:")
+    st.set_page_config(
+        page_title="ASVzL Törnbeitragsrechner", page_icon=":boat:")
 
     # page title & header
-    st.title("Törnbeitragsrechner","section-1")
+    st.title("Törnbeitragsrechner", "section-1")
     st.write(
         "Die App speichert keinerlei Daten, weshalb Eingaben und Ergebnisse nur bis zur Beendigung der Browser Sitzung zur Verfügung stehen."
     )
@@ -200,11 +202,11 @@ def app(rate_groups, boat_rates, extra_rates):
     trip.boat = trip_col1.selectbox("Boot", boat_rates.keys())
     # boat_rate = boat_rates.get(boat)
     trip.first_day = trip_col2.date_input(
-        "Reisedatum von",value=trip.first_day)
-    
+        "Reisedatum von", value=trip.first_day)
+
     trip.last_day = trip_col3.date_input(
         "Reisedatum bis",
-        value=trip.first_day + timedelta(days=14),min_value=trip.first_day + timedelta(days=1))
+        value=trip.first_day + timedelta(days=14), min_value=trip.first_day + timedelta(days=1))
 
     trip_col4.write("Anzahl Nächte\n\n" + str(trip.number_of_nights))
     # check trip duration
@@ -241,25 +243,26 @@ def app(rate_groups, boat_rates, extra_rates):
         p = Participant(trip)
         default_name = "Jane Doe " + str(i + 1)
 
-        p.name = p_col1.text_input("", value=default_name, key=i)
+        p.name = p_col1.text_input("", value=default_name, key="name" + str(i))
         trip.participants.append(p)
 
         # check for duplicate participant name
-        participant_names = [participant.name for participant in trip.participants]
+        participant_names = [
+            participant.name for participant in trip.participants]
         if participant_names.count(p.name) > 1:
             st.warning(
                 "Teilnehmer Name wird bereits verwendet. Namen müssen einzigarting sein, damit die App funktioniert!"
             )
             st.stop()
 
-        p.type = p_col2.selectbox("", rate_groups.keys(), key=i)
+        p.type = p_col2.selectbox("", rate_groups.keys(), key="type" + str(i))
 
         p.first_day = p_col3.date_input(
             "",
             value=p.first_day,
             min_value=trip.first_day,
             max_value=trip.last_day - timedelta(days=1),
-            key=i,
+            key="first_day"+str(i)
         )
 
         p.last_day = p_col4.date_input(
@@ -267,7 +270,7 @@ def app(rate_groups, boat_rates, extra_rates):
             value=p.last_day,
             min_value=p.first_day + timedelta(days=1),
             max_value=trip.last_day,
-            key=i,
+            key="last_day"+str(i)
         )
 
         trip.participants[i] = p
@@ -380,7 +383,8 @@ def app(rate_groups, boat_rates, extra_rates):
     bic = "NOLADE21SPL"
     betrag = "{:.2f}".format(trip.total)
 
-    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=5)
+    qr = qrcode.QRCode(
+        error_correction=qrcode.constants.ERROR_CORRECT_M, box_size=5)
 
     qr.add_data("BCD\n")
     qr.add_data("002\n")
@@ -404,7 +408,7 @@ def app(rate_groups, boat_rates, extra_rates):
     st.write("Betrag: " + str(betrag))
     st.write("Verwendungszweck: " + vwz)
 
-    st.title("Gebührenordnung","section-2")
+    st.title("Gebührenordnung", "section-2")
     st.markdown("[nach oben >](#section-1)", unsafe_allow_html=True)
 
     """
