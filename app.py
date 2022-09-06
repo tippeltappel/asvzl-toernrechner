@@ -435,13 +435,17 @@ def app(rate_groups, boat_rates, extra_rates):
     >>Beitragsstufenaufschlag je Nacht: I: -, II: 13 €, III: 23 €
 
     ## Regeln
-    * Jedem Teilnehmer wird eine Beitragsstufe zugeordnet.
-    * Schüler, Auszubildende und Doktoranden werden wie Studenten eingestuft.
-    * Gästen von anderen Vereinen im VASV wird die entsprechende Beitragsstufe wie Mitglieder zugeordnet.
-    * Je Übernachtung wird an den Schatzmeister die Bootspauschale plus die Aufschläge gemäß Beitragsstufe abzüglich eines eventuellen Skipperrabatts durch den Skipper abgeführt.
-    * Jeder Teilnehmer trägt den gleichen Anteil an der Bootspauschale.
-    * Jeder Teilnehmer zahlt zusätzlich einen Aufschlag entsprechend seiner Beitragsstufe.
-    * Entfallen mehr als 50 % der Summe der Teilnehmerübernachtungen auf OM, darf der Skipper seinen Beitrag halbieren.
+    * Je Übernachtung wird vor dem Törn an den Schatzmeister die Bootspauschale plus die Aufschläge gemäß Beitragsstufe durch den Skipper abgeführt. )*
+    * Jeder Teilnehmer zahlt je Übernachtung den gleichen Anteil an der Bootspauschale.
+    * Jeder Teilnehmer zahlt zusätzlich je Übernachtung einen Aufschlag entsprechend seiner Beitragsstufe.
+    * Jedem Teilnehmer wird eine Beitragsstufe zugeordnet, wobei Schüler und Auszubildende wie Studenten eingestuft werden. )**
+    * Gästen von anderen Vereinen im VASV wird die entsprechende Beitragsstufe der Mitglieder zugeordnet.    
+    * Entfallen mindestens 50 % der Summe der Teilnehmerübernachtungen auf OM, ist der Skipper von der Zahlung des Aufschlags befreit.
+    
+     
+     )* Die Sonderegelungen für Regattaveranstaltungen sind noch an die neue Gebührenstruktur anzupassen und in dieser App nicht berücksichtigt.
+     
+     )** Promotionsstudenten werden in der Praxis wie Studenten behandelt, dies ist aber in der Gebührenordnung nicht erwähnt.
     """
 
 
