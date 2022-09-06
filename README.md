@@ -1,2 +1,2 @@
 # asvzl-toernrechner
-berechnet die Törnbeiträge der Teilnehmer des ASV zu Lübeck .e.V.
+berechnet die Nutzungsbeiträge der Törn-Teilnehmer des ASV zu Lübeck .e.V.
