@@ -294,7 +294,7 @@ def app(rate_groups, boat_rates, extra_rates):
             + "%\n\nSkipper ist nicht verpflichtet den Aufschlag zu zahlen, da mindestens die Hälfte der Übernachtungen auf 'OM' entfallen."
         )
         skipper_radio_button = st.radio(
-            "Möchte der Skipper die Befreiung vom Aufschlag in Anspruch Anspruch nehmen? Dieser darf im nachherein gerne gespendet werden.",
+            "Möchte der Skipper die Befreiung vom Aufschlag in Anspruch nehmen? Die Ersparnis darf im nachherein gerne gespendet werden.",
             ("Ja", "Nein"),
             index=1,
             horizontal=True,
