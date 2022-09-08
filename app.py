@@ -93,7 +93,7 @@ class Trip:
 
     @property
     def is_skipper_discount_entitled(self):
-        if self.participants_nights_om / self.participants_nights > 0.5:
+        if self.participants_nights_om / self.participants_nights >= 0.5:
             return True
         else:
             return False
@@ -147,24 +147,14 @@ class Participant(Trip):
             and self.trip.is_skipper_discount_entitled
             and self.trip.is_skipper_discount_desired
         ):
-            return (0.5 * self.number_of_nights * self.extra_rate), "(*)"
+            return (self.number_of_nights * 0), "(*)"
         else:
             return (self.number_of_nights * self.extra_rate), ""
 
     @property
     def boat_total(self):
-        if (
-            self.trip.skipper == self.name
-            and self.trip.is_skipper_discount_entitled
-            and self.trip.is_skipper_discount_desired
-        ):
-            return round_up(
-                0.5 * self.number_of_nights * self.trip.boat_rate_by_participant_night
-            )
-        else:
-            return round_up(
-                self.number_of_nights * self.trip.boat_rate_by_participant_night
-            )
+       return round_up(
+            self.number_of_nights * self.trip.boat_rate_by_participant_night)
 
 
 def round_up(n):
@@ -220,11 +210,11 @@ def app(rate_groups, boat_rates, extra_rates):
     st.info(
         "Die Bootspauschale für den Törn beträgt : "
         + str(trip.boat_rate)
-        + "€ x "
+        + " € x "
         + str(trip.number_of_nights)
-        + " Nächte ~ "
+        + " Nächte = "
         + str(trip.max_boat_total)
-        + "€ (evtl. möglicher Skipper-Rabatt noch unberücksichtigt)"
+        + " €"
     )
 
     trip.number_of_participants = st.selectbox(
@@ -278,16 +268,16 @@ def app(rate_groups, boat_rates, extra_rates):
     st.info(
         "Bootspauschale je Teilnehmer pro Nacht beträgt: "
         + str(trip.max_boat_total)
-        + "€ / "
+        + " € / "
         + str(trip.participants_nights)
-        + " Teilnehmernächte ~ "
+        + " Teilnehmernächte = "
         + "{:.2f}".format(trip.boat_rate_by_participant_night)
-        + "€"
+        + " €"
     )
 
     # input skipper data
     trip.skipper = st.selectbox(
-        "Skipper Name, für Überweisungs QR-Code bitte oben vollständig eingeben!",
+        "Skipper Name, für Überweisungs-QR-Code bitte oben vollständig eingeben!",
         participant_names,
     )
     trip.skipper_IBAN = st.text_input("Skipper IBAN")
@@ -301,19 +291,18 @@ def app(rate_groups, boat_rates, extra_rates):
             + "{:.0f}".format(
                 trip.participants_nights_om / trip.participants_nights * 100
             )
-            + "%\n\nSkipper ist Rabatt berechtigt, da mehr als die Hälfte der Übernachtungen auf 'OM' entfallen."
+            + "%\n\nSkipper ist nicht verpflichtet den Aufschlag zu zahlen, da mindestens die Hälfte der Übernachtungen auf 'OM' entfallen."
         )
         skipper_radio_button = st.radio(
-            "Möchte der Skipper einen möglichen 50% Rabatt in Anspruch nehmen? Dieser darf im nachherein gerne gespendet werden.",
+            "Möchte der Skipper die Befreiung vom Aufschlag in Anspruch Anspruch nehmen? Dieser darf im nachherein gerne gespendet werden.",
             ("Ja", "Nein"),
             index=1,
             horizontal=True,
         )
-        if skipper_radio_button == "Ja":
-            trip.is_skipper_discount_desired = True
-            st.write("Mit (*) markierte Zeile berücksichtigt 50% Skipper-Rabatt.")
-        else:
-            trip.is_skipper_discount_desired = False
+    if skipper_radio_button == "Ja":
+        trip.is_skipper_discount_desired = True
+    else:
+        trip.is_skipper_discount_desired = False
 
     # output result data for every participant
     p_col1, p_col2, p_col3, p_col4, p_col5, p_col6 = st.columns(6)
@@ -325,12 +314,19 @@ def app(rate_groups, boat_rates, extra_rates):
     p_col6.caption("Törnbeitrag")
     for i in range(trip.number_of_participants):
         p = trip.participants[i]
-        p_col1.text(p.extra_total[1] + p.name)
+        p_col1.text(p.name)
         p_col2.text(p.rate_group)
-        p_col3.text(p.extra_rate)
+        p_col3.text("{:.2f}".format(p.extra_rate) + p.extra_total[1])
         p_col4.text("{:.2f}".format(trip.boat_rate_by_participant_night))
         p_col5.text(p.number_of_nights)
-        p_col6.text("{:.2f}".format(p.extra_total[0] + p.boat_total))
+        p_col6.text("{:.2f}".format(p.extra_total[0] + p.boat_total) + p.extra_total[1])
+
+    if skipper_radio_button == "Ja":
+        trip.is_skipper_discount_desired = True
+        st.write("Mit (*) markierte Zeile berücksichtigt Skipper Befreiung vom Aufschlag.")
+    else:
+        trip.is_skipper_discount_desired = False
+
 
     st.subheader("QR-Codes zur Überweisung der Törnbeiträge")
     st.write("Erfolgreich getestet mit ING und Postbank.")
